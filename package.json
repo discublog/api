@@ -1,6 +1,6 @@
 {
   "name": "@discublog/api",
-  "version": "0.0.0-test.0",
+  "version": "0.0.0-test.1",
   "description": "A ready-to-use, reusable wrapper for the GitHub Discussions API, based on the GitHub GraphQL API.",
   "type": "module",
   "main": "dist/index.js",

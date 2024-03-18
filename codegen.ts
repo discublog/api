@@ -33,7 +33,6 @@ const config: CodegenConfig = {
         hooks: {
           afterOneFileWrite: ['prettier --write'],
         },
-        avoidOptionals: true,
         constEnums: true,
         enumsAsTypes: true,
         documentMode: 'external',
