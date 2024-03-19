@@ -207,13 +207,13 @@ export function search(
   return client.graphql(
     /* GraphQL */ `
       query DiscussionsSearch(
-        $query: String!
+        $queryStr: String!
         $first: Int!
         $body: Boolean!
         $bodyHTML: Boolean!
         $cursor: String
       ) {
-        search(first: $first, type: DISCUSSION, query: $query, after: $cursor) {
+        search(first: $first, type: DISCUSSION, query: $queryStr, after: $cursor) {
           nodes {
             ... on Discussion {
               number
@@ -246,7 +246,7 @@ export function search(
       cursor,
       body,
       bodyHTML,
-      query,
+      queryStr:query,
     },
   )
 }

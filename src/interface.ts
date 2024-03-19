@@ -42,7 +42,7 @@ export type DiscussionCategoriesQuery = Repository<{
   discussionCategories: Connection<DiscussionCategory>
 }>
 export type AllLabelsQuery = Repository<{ labels: Connection<Label> }>
-export type DiscussionsSearchQuery = Repository<{ search: PaginationConnection<Discussion> }>
+export type DiscussionsSearchQuery = { search: PaginationConnection<Discussion> }
 
 export interface DiscussionsQueryVariables {
   first?: number
@@ -57,8 +57,8 @@ export interface DiscussionsQueryVariables {
 export interface DiscussionsSearchQueryVariables {
   query?: string
   first?: number
-  body?: string
-  bodyHTML?: string
+  body?: boolean
+  bodyHTML?: boolean
   cursor?: string
 }
 
