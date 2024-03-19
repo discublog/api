@@ -5,8 +5,8 @@ import type {
   DiscussionsQueryVariables,
   DiscussionCategoriesQuery,
   AllLabelsQuery,
-  DiscussionsSearchQueryVariables,
   DiscussionsSearchQuery,
+  DiscussionsSearchQueryVariables,
 } from './interface'
 
 // type utils
@@ -69,10 +69,7 @@ export function queryCategories(config: Configuration): Promise<DiscussionCatego
 }
 
 // Discussions
-export type QueryByCategoryIdParams = PickPartial<
-  RepositoryOmit<DiscussionsQueryVariables>,
-  'first' | 'body' | 'bodyHTML'
->
+export type QueryByCategoryIdParams = RepositoryOmit<DiscussionsQueryVariables>
 
 export function queryByCategoryId(
   config: Configuration,
@@ -180,14 +177,14 @@ export function queryLabels(config: Configuration): Promise<AllLabelsQuery> {
 }
 
 interface SearchParamsByLabelAndCategory
-  extends Omit<RepositoryOmit<DiscussionsSearchQueryVariables>, 'query'> {
+  extends Omit<DiscussionsSearchQueryVariables, 'query'> {
   label?: string
   category?: string
 }
 
-export type SearchParams =
-  | SearchParamsByLabelAndCategory
-  | RepositoryOmit<DiscussionsSearchQueryVariables>
+type SearchParamsByQuery = DiscussionsSearchQueryVariables
+
+export type SearchParams = SearchParamsByLabelAndCategory | SearchParamsByQuery
 
 export function search(
   config: Configuration,
@@ -199,7 +196,7 @@ export function search(
   if ('query' in params) {
     query += ` ${params.query}`
   } else {
-    const { label, category } = params
+    const { label, category } = params as SearchParamsByLabelAndCategory
     if (label) {
       query += ` label:${label}`
     }

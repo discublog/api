@@ -1,6 +1,6 @@
 {
   "name": "@discublog/api",
-  "version": "0.0.0-test.1",
+  "version": "0.0.0",
   "description": "A ready-to-use, reusable wrapper for the GitHub Discussions API, based on the GitHub GraphQL API.",
   "type": "module",
   "main": "dist/index.js",
@@ -26,20 +26,13 @@
   "author": "zhangyu1818 <hey@zhangyu.dev>",
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "format": "npx prettier --write .",
-    "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
+    "format": "npx prettier --write ."
   },
   "license": "MIT",
   "dependencies": {
     "@octokit/core": "^6.0.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.2",
-    "@graphql-codegen/typescript": "4.0.6",
-    "@graphql-codegen/typescript-document-nodes": "^4.0.6",
-    "@graphql-codegen/typescript-operations": "^4.2.0",
-    "@types/node": "^20.11.28",
-    "dotenv": "^16.4.5",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"
   },
