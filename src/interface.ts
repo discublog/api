@@ -1,33 +1,33 @@
-interface PageInfo {
+export interface PageInfo {
   endCursor?: string
   hasNextPage: boolean
   hasPreviousPage: boolean
   startCursor?: string
 }
 
-interface PaginationConnection<T> {
+export interface PaginationConnection<T> {
   nodes: T[]
   pageInfo: PageInfo
   totalCount: number
 }
 
-interface Connection<T> {
+export interface Connection<T> {
   nodes: T[]
 }
 
-interface Label {
+export interface Label {
   id: string
   color: string
   name: string
 }
 
-interface Author {
+export interface Author {
   avatarUrl: string
   url: string
   login: string
 }
 
-interface Discussion {
+export interface Discussion {
   author: Author | null
   number: number
   title: string
@@ -40,7 +40,7 @@ interface Discussion {
   labels: Connection<Label>
 }
 
-interface DiscussionCategory {
+export interface DiscussionCategory {
   id: string
   name: string
 }
@@ -72,4 +72,4 @@ export interface DiscussionsSearchQueryVariables {
   cursor?: string
 }
 
-type Repository<T> = { repository: T | null }
+export type Repository<T> = { repository: T | null }

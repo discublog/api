@@ -15,6 +15,9 @@
     "./client": {
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
+    },
+    "./interface": {
+      "types": "./dist/interface.d.ts"
     }
   },
   "keywords": [
