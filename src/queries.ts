@@ -73,7 +73,14 @@ export type QueryByCategoryIdParams = RepositoryOmit<DiscussionsQueryVariables>
 
 export function queryByCategoryId(
   config: Configuration,
-  { first = 100, categoryId, body = false, bodyHTML = false, cursor }: QueryByCategoryIdParams,
+  {
+    first = 100,
+    categoryId,
+    body = false,
+    bodyHTML = false,
+    bodyText = false,
+    cursor,
+  }: QueryByCategoryIdParams,
 ): Promise<DiscussionsQuery> {
   const { client, owner, name } = check(config)
   return client.graphql(
@@ -85,6 +92,7 @@ export function queryByCategoryId(
         $categoryId: ID!
         $body: Boolean!
         $bodyHTML: Boolean!
+        $bodyText: Boolean!
         $cursor: String
       ) {
         repository(owner: $owner, name: $name) {
@@ -95,6 +103,11 @@ export function queryByCategoryId(
             categoryId: $categoryId
           ) {
             nodes {
+              author {
+                login
+                url
+                avatarUrl
+              }
               number
               title
               createdAt
@@ -102,8 +115,10 @@ export function queryByCategoryId(
               url
               body @include(if: $body)
               bodyHTML @include(if: $bodyHTML)
+              bodyText @include(if: $bodyText)
               labels(first: 5) {
                 nodes {
+                  id
                   name
                   color
                 }
@@ -127,6 +142,7 @@ export function queryByCategoryId(
       categoryId,
       body,
       bodyHTML,
+      bodyText,
       cursor,
     },
   )
@@ -162,6 +178,7 @@ export function queryLabels(config: Configuration): Promise<AllLabelsQuery> {
         repository(owner: $owner, name: $name) {
           labels(first: 100, orderBy: { field: NAME, direction: ASC }) {
             nodes {
+              id
               name
               color
             }
@@ -176,8 +193,7 @@ export function queryLabels(config: Configuration): Promise<AllLabelsQuery> {
   )
 }
 
-interface SearchParamsByLabelAndCategory
-  extends Omit<DiscussionsSearchQueryVariables, 'query'> {
+interface SearchParamsByLabelAndCategory extends Omit<DiscussionsSearchQueryVariables, 'query'> {
   label?: string
   category?: string
 }
@@ -191,7 +207,7 @@ export function search(
   params: SearchParams,
 ): Promise<DiscussionsSearchQuery> {
   const { client, owner, name } = check(config)
-  const { first = 100, body = false, bodyHTML = false, cursor } = params
+  const { first = 100, body = false, bodyHTML = false, bodyText = false, cursor } = params
   let query = `repo:${owner}/${name}`
   if ('query' in params) {
     query += ` ${params.query}`
@@ -211,11 +227,17 @@ export function search(
         $first: Int!
         $body: Boolean!
         $bodyHTML: Boolean!
+        $bodyText: Boolean!
         $cursor: String
       ) {
         search(first: $first, type: DISCUSSION, query: $queryStr, after: $cursor) {
           nodes {
             ... on Discussion {
+              author {
+                login
+                url
+                avatarUrl
+              }
               number
               title
               createdAt
@@ -223,8 +245,10 @@ export function search(
               url
               body @include(if: $body)
               bodyHTML @include(if: $bodyHTML)
+              bodyText @include(if: $bodyText)
               labels(first: 5) {
                 nodes {
+                  id
                   color
                   name
                 }
@@ -246,7 +270,8 @@ export function search(
       cursor,
       body,
       bodyHTML,
-      queryStr:query,
+      bodyText,
+      queryStr: query,
     },
   )
 }

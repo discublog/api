@@ -21,7 +21,14 @@ interface Label {
   name: string
 }
 
+interface Author {
+  avatarUrl: string
+  url: string
+  login: string
+}
+
 interface Discussion {
+  author: Author | null
   number: number
   title: string
   createdAt: string
@@ -29,6 +36,7 @@ interface Discussion {
   url: string
   body?: string
   bodyHTML?: string
+  bodyText?: string
   labels: Connection<Label>
 }
 
@@ -51,6 +59,7 @@ export interface DiscussionsQueryVariables {
   categoryId: string
   body?: boolean
   bodyHTML?: boolean
+  bodyText?: boolean
   cursor?: string
 }
 
@@ -59,6 +68,7 @@ export interface DiscussionsSearchQueryVariables {
   first?: number
   body?: boolean
   bodyHTML?: boolean
+  bodyText?: boolean
   cursor?: string
 }
 
