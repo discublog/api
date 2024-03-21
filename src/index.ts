@@ -38,6 +38,6 @@ export function queryLabels() {
   return queryLabelsWithConfig(config)
 }
 
-export function search(params: SearchParams) {
+export function search(params: SearchParams = {}) {
   return searchWithConfig(config, params)
 }

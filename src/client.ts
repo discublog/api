@@ -22,7 +22,7 @@ export class Client {
     auth(this.config, params)
   }
 
-  search(params: SearchParams) {
+  search(params: SearchParams = {}) {
     return search(this.config, params)
   }
 
