@@ -208,16 +208,16 @@ export function search(
 ): Promise<DiscussionsSearchQuery> {
   const { client, owner, name } = check(config)
   const { first = 100, body = false, bodyHTML = false, bodyText = false, cursor } = params
-  let query = `repo:${owner}/${name}`
+  let query = `repo:"${owner}/${name}"`
   if ('query' in params) {
     query += ` ${params.query}`
   } else {
     const { label, category } = params as SearchParamsByLabelAndCategory
     if (label) {
-      query += ` label:${label}`
+      query += ` label:"${label}"`
     }
     if (category) {
-      query += ` category:${category}`
+      query += ` category:"${category}"`
     }
   }
   return client.graphql(
