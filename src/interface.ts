@@ -46,6 +46,7 @@ export interface DiscussionCategory {
 }
 
 export type DiscussionsQuery = Repository<{ discussions: PaginationConnection<Discussion> }>
+export type DiscussionQuery = Repository<{ discussion: Discussion | null }>
 export type DiscussionCategoriesQuery = Repository<{
   discussionCategories: Connection<DiscussionCategory>
 }>
@@ -61,6 +62,13 @@ export interface DiscussionsQueryVariables {
   bodyHTML?: boolean
   bodyText?: boolean
   cursor?: string
+}
+
+export interface DiscussionQueryVariables {
+  number: number
+  body?: boolean
+  bodyHTML?: boolean
+  bodyText?: boolean
 }
 
 export interface DiscussionsSearchQueryVariables {

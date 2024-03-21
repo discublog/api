@@ -4,12 +4,14 @@ import {
   queryByCategoryId as queryByCategoryIdWithConfig,
   queryCategories as queryCategoriesWithConfig,
   queryLabels as queryLabelsWithConfig,
+  queryByNumber as queryByNumberWithConfig,
   search as searchWithConfig,
   type AuthParams,
   type Configuration,
   type SearchParams,
   type QueryByCategoryNameParams,
   type QueryByCategoryIdParams,
+  type QueryByNumberParams,
 } from './queries'
 
 const config: Configuration = {
@@ -40,4 +42,8 @@ export function queryLabels() {
 
 export function search(params: SearchParams = {}) {
   return searchWithConfig(config, params)
+}
+
+export function queryByNumber(params: QueryByNumberParams) {
+  return queryByNumberWithConfig(config, params)
 }

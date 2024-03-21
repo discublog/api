@@ -7,6 +7,8 @@ import type {
   AllLabelsQuery,
   DiscussionsSearchQuery,
   DiscussionsSearchQueryVariables,
+  DiscussionQueryVariables,
+  DiscussionQuery,
 } from './interface'
 
 // type utils
@@ -168,6 +170,60 @@ export async function queryByCategoryName(
     return null
   }
   return queryByCategoryId(config, { ...rest, categoryId })
+}
+
+export type QueryByNumberParams = DiscussionQueryVariables
+
+export async function queryByNumber(
+  config: Configuration,
+  { number, body = false, bodyHTML = false, bodyText = false }: QueryByNumberParams,
+): Promise<DiscussionQuery> {
+  const { client, owner, name } = check(config)
+  return client.graphql(
+    /* GraphQL */ `
+      query Discussion(
+        $owner: String!
+        $name: String!
+        $number: Int!
+        $body: Boolean!
+        $bodyHTML: Boolean!
+        $bodyText: Boolean!
+      ) {
+        repository(owner: $owner, name: $name) {
+          discussion(number: $number) {
+            author {
+              login
+              url
+              avatarUrl
+            }
+            number
+            title
+            createdAt
+            updatedAt
+            url
+            body @include(if: $body)
+            bodyHTML @include(if: $bodyHTML)
+            bodyText @include(if: $bodyText)
+            labels(first: 5) {
+              nodes {
+                id
+                name
+                color
+              }
+            }
+          }
+        }
+      }
+    `,
+    {
+      owner,
+      name,
+      number,
+      body,
+      bodyHTML,
+      bodyText,
+    },
+  )
 }
 
 export function queryLabels(config: Configuration): Promise<AllLabelsQuery> {

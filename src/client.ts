@@ -2,6 +2,7 @@ import {
   auth,
   queryByCategoryName,
   queryByCategoryId,
+  queryByNumber,
   queryCategories,
   queryLabels,
   search,
@@ -10,6 +11,7 @@ import {
   type SearchParams,
   type QueryByCategoryNameParams,
   type QueryByCategoryIdParams,
+  type QueryByNumberParams,
 } from './queries'
 
 export class Client {
@@ -32,6 +34,10 @@ export class Client {
 
   queryByCategoryId(params: QueryByCategoryIdParams) {
     return queryByCategoryId(this.config, params)
+  }
+
+  queryByNumber(params: QueryByNumberParams) {
+    return queryByNumber(this.config, params)
   }
 
   queryCategories() {
