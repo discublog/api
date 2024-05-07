@@ -249,12 +249,18 @@ export function queryLabels(config: Configuration): Promise<AllLabelsQuery> {
   )
 }
 
-interface SearchParamsByLabelAndCategory extends Omit<DiscussionsSearchQueryVariables, 'query'> {
+interface SearchParamsByLabelAndCategory extends DiscussionsSearchQueryVariables {
   label?: string
   category?: string
+  // not allowed to have query
+  query?: never
 }
 
-type SearchParamsByQuery = DiscussionsSearchQueryVariables
+interface SearchParamsByQuery extends DiscussionsSearchQueryVariables {
+  // not allowed to have label and category
+  label?: never
+  category?: never
+}
 
 export type SearchParams = (SearchParamsByLabelAndCategory | SearchParamsByQuery) & {
   orderBy?: 'createdAt' | 'updatedAt'
