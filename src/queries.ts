@@ -256,14 +256,16 @@ interface SearchParamsByLabelAndCategory extends Omit<DiscussionsSearchQueryVari
 
 type SearchParamsByQuery = DiscussionsSearchQueryVariables
 
-export type SearchParams = SearchParamsByLabelAndCategory | SearchParamsByQuery
+export type SearchParams = (SearchParamsByLabelAndCategory | SearchParamsByQuery) & {
+  orderBy?: 'createdAt' | 'updatedAt'
+}
 
-export function search(
+export async function search(
   config: Configuration,
   params: SearchParams,
 ): Promise<DiscussionsSearchQuery> {
   const { client, owner, name } = check(config)
-  const { first = 100, body = false, bodyHTML = false, bodyText = false, cursor } = params
+  const { first = 100, body = false, bodyHTML = false, bodyText = false, cursor, orderBy } = params
   let query = `repo:"${owner}/${name}"`
   if ('query' in params) {
     query += ` ${params.query}`
@@ -276,58 +278,65 @@ export function search(
       query += ` category:"${category}"`
     }
   }
-  return client.graphql(
-    /* GraphQL */ `
-      query DiscussionsSearch(
-        $queryStr: String!
-        $first: Int!
-        $body: Boolean!
-        $bodyHTML: Boolean!
-        $bodyText: Boolean!
-        $cursor: String
-      ) {
-        search(first: $first, type: DISCUSSION, query: $queryStr, after: $cursor) {
-          nodes {
-            ... on Discussion {
-              author {
-                login
+  return client
+    .graphql<DiscussionsSearchQuery>(
+      /* GraphQL */ `
+        query DiscussionsSearch(
+          $queryStr: String!
+          $first: Int!
+          $body: Boolean!
+          $bodyHTML: Boolean!
+          $bodyText: Boolean!
+          $cursor: String
+        ) {
+          search(first: $first, type: DISCUSSION, query: $queryStr, after: $cursor) {
+            nodes {
+              ... on Discussion {
+                author {
+                  login
+                  url
+                  avatarUrl
+                }
+                number
+                title
+                createdAt
+                updatedAt
                 url
-                avatarUrl
-              }
-              number
-              title
-              createdAt
-              updatedAt
-              url
-              body @include(if: $body)
-              bodyHTML @include(if: $bodyHTML)
-              bodyText @include(if: $bodyText)
-              labels(first: 5) {
-                nodes {
-                  id
-                  color
-                  name
+                body @include(if: $body)
+                bodyHTML @include(if: $bodyHTML)
+                bodyText @include(if: $bodyText)
+                labels(first: 5) {
+                  nodes {
+                    id
+                    color
+                    name
+                  }
                 }
               }
             }
+            pageInfo {
+              startCursor
+              hasPreviousPage
+              hasNextPage
+              endCursor
+            }
+            totalCount: discussionCount
           }
-          pageInfo {
-            startCursor
-            hasPreviousPage
-            hasNextPage
-            endCursor
-          }
-          totalCount: discussionCount
         }
+      `,
+      {
+        first,
+        cursor,
+        body,
+        bodyHTML,
+        bodyText,
+        queryStr: query,
+      },
+    )
+    .then(result => {
+      if (orderBy === 'createdAt') {
+        result.search.nodes.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       }
-    `,
-    {
-      first,
-      cursor,
-      body,
-      bodyHTML,
-      bodyText,
-      queryStr: query,
-    },
-  )
+      return result
+    })
 }
