@@ -2,6 +2,9 @@
 
 This package is designed for querying the discussions content within a specified GitHub repository, providing complete type definition.
 
+> [!WARNING]
+> Moved to [discublog](https://github.com/discublog/discublog/tree/main/packages/api).
+
 ## Installation
 
 ```bash
